@@ -1,36 +1,31 @@
 {
-  "id": "5e-chm-in-fvtt",
-  "title": "5E不全书fvtt内部部署",
-  "description": "在FVTT内嵌浏览器中打开5e不全书。适配 dnd5e 5.x 系统。",
-  "version": "release-2-26.02.07",
+  "id": "more-color-mouse",
+  "title": "More Color Mouse",
+  "description": "自定义鼠标光标样式，增加彩虹拖尾效果",
+  "version": "1.1.0",
   "compatibility": {
     "minimum": "13",
     "verified": "14"
   },
-  "styles": [
-    "styles/module.css"
-  ],
-  "relationships": {
-    "systems": [
-      {
-        "id": "dnd5e",
-        "type": "system",
-        "compatibility": {
-          "minimum": "5.1.0",
-          "verified": "5.2.x"
-        }
-      }
-    ]
-  },
   "authors": [
     {
-      "name": "xian_miao"
+      "name": "Xian_Miao"
     }
   ],
   "esmodules": [
     "scripts/main.js"
   ],
+  "styles": [
+    "styles/mouse.css"
+  ],
+  "languages": [
+    {
+      "lang": "zh-cn",
+      "name": "中文",
+      "path": "languages/zh-cn.json"
+    }
+  ],
   "url": "",
-  "manifest": "https://github.com/Heldea-xianmiao/fvtt-5echm-online-mod/blob/main/module.json",
-  "download": "https://github.com/Heldea-xianmiao/fvtt-5echm-online-mod/releases"
+  "manifest": "https://github.com/Heldea-xianmiao/more-color-mouse-fvtt-mod/blob/main/module.json",
+  "download": "https://github.com/Heldea-xianmiao/more-color-mouse-fvtt-mod/releases"
 }
