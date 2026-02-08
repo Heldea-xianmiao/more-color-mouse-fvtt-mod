@@ -1,0 +1,15 @@
+/* 隐藏系统光标 */
+body.mcm-hide-cursor, body.mcm-hide-cursor * {
+    cursor: none !important;
+}
+
+/* 我们的自定义 Canvas */
+#more-color-mouse-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 让鼠标事件穿透 */
+    z-index: 999999; /* 确保在最顶层，超过 Foundry 的 UI */
+}

@@ -1,0 +1,18 @@
+{
+  "MCM.Settings.Enable.Name": "启用自定义光标",
+  "MCM.Settings.Enable.Hint": "开启或关闭自定义光标及拖尾效果。",
+  "MCM.Settings.HideSystemCursor.Name": "隐藏系统光标",
+  "MCM.Settings.HideSystemCursor.Hint": "隐藏操作系统默认的鼠标指针。",
+  "MCM.Settings.TrailLength.Name": "拖尾长度",
+  "MCM.Settings.TrailLength.Hint": "追踪的历史坐标点数量。",
+  "MCM.Settings.CursorSize.Name": "光标大小",
+  "MCM.Settings.CursorSize.Hint": "主光标圆圈的半径。",
+  "MCM.Settings.RainbowMode.Name": "彩虹模式",
+  "MCM.Settings.RainbowMode.Hint": "颜色随时间自动循环变化。",
+  "MCM.Settings.BaseColor.Name": "光标颜色",
+  "MCM.Settings.BaseColor.Hint": "如果关闭彩虹模式，则使用此静态颜色。",
+  "MCM.Settings.TrailStyle.Name": "拖尾样式",
+  "MCM.Settings.TrailStyle.Hint": "选择拖尾的视觉样式。",
+  "MCM.TrailStyles.Simple": "简单衰减",
+  "MCM.TrailStyles.Particles": "粒子效果"
+}
