@@ -194,64 +194,72 @@ class MouseManager {
         });
 
         Hooks.on("renderSettingsConfig", (app, html, data) => {
-            const $html = html instanceof jQuery ? html : $(html);
+            const root = html instanceof HTMLElement ? html : html[0] || html;
 
             const colorFields = ['baseColor', 'trailColor'];
             colorFields.forEach(fieldKey => {
                 const name = `${MODULE_ID}.${fieldKey}`;
-                const input = $html.find(`input[name="${name}"]`);
-                
-                if (!input.length) return;
-                
-                if (input.parent().hasClass('mcm-color-wrapper')) return;
+                const input = root.querySelector(`input[name="${name}"]`);
+                if (!input) return;
 
-                const wrapper = $('<div class="mcm-color-wrapper" style="display:flex; align-items:center; gap: 8px;"></div>');
-                
-                input.wrap(wrapper);
-                const actualWrapper = input.parent();
+                if (input.parentElement.classList.contains('mcm-color-wrapper')) return;
 
-                let initialColor = input.val();
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mcm-color-wrapper';
+                wrapper.style.cssText = 'display:flex; align-items:center; gap: 8px;';
+
+                input.parentNode.insertBefore(wrapper, input);
+                wrapper.appendChild(input);
+
+                let initialColor = input.value;
                 if (!initialColor || !initialColor.startsWith('#')) initialColor = '#000000';
 
-                const colorPicker = $(`<input type="color" value="${initialColor}" style="height: 26px; width: 40px; border: 1px solid #787878; padding: 1px; cursor: pointer; margin: 0;">`);
-                
-                colorPicker.on('input', (e) => {
-                    input.val(e.target.value);
+                const colorPicker = document.createElement('input');
+                colorPicker.type = 'color';
+                colorPicker.value = initialColor;
+                colorPicker.style.cssText = 'height: 26px; width: 40px; border: 1px solid #787878; padding: 1px; cursor: pointer; margin: 0;';
+
+                colorPicker.addEventListener('input', (e) => {
+                    input.value = e.target.value;
                 });
-                
-                input.on('change', (e) => {
-                    let v = e.target.value;
+
+                input.addEventListener('change', (e) => {
+                    const v = e.target.value;
                     if (v && v.startsWith('#') && v.length === 7) {
-                        colorPicker.val(v);
+                        colorPicker.value = v;
                     }
                 });
-                
-                actualWrapper.append(colorPicker);
+
+                wrapper.appendChild(colorPicker);
             });
 
             const imageFields = ['cursorImage', 'trailImage'];
             imageFields.forEach(fieldKey => {
                 const name = `${MODULE_ID}.${fieldKey}`;
-                const input = $html.find(`input[name="${name}"]`);
-                if (!input.length) return;
+                const input = root.querySelector(`input[name="${name}"]`);
+                if (!input) return;
 
-                const clearBtn = $(`<button type="button" title="${game.i18n.localize('MCM.ClearImage')}" style="flex:0 0 30px; line-height:24px; margin-left:5px;"><i class="fas fa-trash"></i></button>`);
-                
-                const pickerBtn = input.next('button.file-picker');
-                if (pickerBtn.length) {
-                    pickerBtn.after(clearBtn);
+                const clearBtn = document.createElement('button');
+                clearBtn.type = 'button';
+                clearBtn.title = game.i18n.localize('MCM.ClearImage');
+                clearBtn.style.cssText = 'flex:0 0 30px; line-height:24px; margin-left:5px;';
+                clearBtn.innerHTML = '<i class="fas fa-trash"></i>';
+
+                const pickerBtn = input.nextElementSibling?.matches('button.file-picker') ? input.nextElementSibling : null;
+                if (pickerBtn) {
+                    pickerBtn.insertAdjacentElement('afterend', clearBtn);
                 } else {
                     const formFields = input.closest('.form-fields');
-                    if (formFields.length) {
-                        formFields.append(clearBtn);
+                    if (formFields) {
+                        formFields.appendChild(clearBtn);
                     } else {
-                        input.after(clearBtn);
+                        input.insertAdjacentElement('afterend', clearBtn);
                     }
                 }
 
-                clearBtn.on('click', () => {
-                    input.val('');
-                    input.trigger('change');
+                clearBtn.addEventListener('click', () => {
+                    input.value = '';
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
                 });
             });
         });
