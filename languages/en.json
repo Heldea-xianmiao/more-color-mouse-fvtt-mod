@@ -23,6 +23,8 @@
   "MCM.Settings.TrailStyle.Hint": "Select the visual style of the trail effect.",
   "MCM.Settings.ParticlePreset.Name": "Particle Preset",
   "MCM.Settings.ParticlePreset.Hint": "When trail style is set to \"Particles\", choose a particle behavior preset.",
+  "MCM.Settings.UseGmCursor.Name": "Follow GM Cursor Settings",
+  "MCM.Settings.UseGmCursor.Hint": "When enabled, your cursor settings will follow the GM's broadcasted configuration. The GM can push settings using the broadcast button below.",
 
   "MCM.CursorShape.Circle": "Circle",
   "MCM.CursorShape.Ring": "Ring",
@@ -40,5 +42,8 @@
   "MCM.ParticlePreset.Snow": "Snow (Falling)",
   "MCM.ParticlePreset.Sparkle": "Magic Sparkle (Static)",
 
-  "MCM.ClearImage": "Clear Image"
+  "MCM.ClearImage": "Clear Image",
+  "MCM.BroadcastLabel": "GM Broadcast",
+  "MCM.BroadcastButton": "Broadcast My Cursor Settings to All Players",
+  "MCM.BroadcastSuccess": "Cursor settings broadcast to all online players!"
 }

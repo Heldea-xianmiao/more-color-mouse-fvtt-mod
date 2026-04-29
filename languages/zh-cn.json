@@ -18,11 +18,13 @@
   "MCM.Settings.TrailColor.Name": "拖尾颜色",
   "MCM.Settings.TrailColor.Hint": "单独设置拖尾的颜色，留空则跟随光标颜色。",
   "MCM.Settings.TrailImage.Name": "自定义拖尾图片",
-  "MCM.Settings.TrailImage.Hint": "当拖尾样式选择“图片重复”时使用的图片。",
+  "MCM.Settings.TrailImage.Hint": "当拖尾样式选择「图片重复」时使用的图片。",
   "MCM.Settings.TrailStyle.Name": "拖尾样式",
   "MCM.Settings.TrailStyle.Hint": "选择拖尾的视觉表现形式。",
   "MCM.Settings.ParticlePreset.Name": "粒子特效预设",
-  "MCM.Settings.ParticlePreset.Hint": "当拖尾样式为“粒子”时，选择具体的粒子动作效果。",
+  "MCM.Settings.ParticlePreset.Hint": "当拖尾样式为「粒子发射」时，选择具体的粒子动作效果。",
+  "MCM.Settings.UseGmCursor.Name": "跟随房主的光标设置",
+  "MCM.Settings.UseGmCursor.Hint": "启用后，你的光标设置将跟随房主（GM）广播的配置。房主可在本页面下方点击广播按钮推送设置。",
 
   "MCM.CursorShape.Circle": "圆形",
   "MCM.CursorShape.Ring": "空心圆环",
@@ -40,5 +42,8 @@
   "MCM.ParticlePreset.Snow": "雪花（下落）",
   "MCM.ParticlePreset.Sparkle": "魔法闪烁（静止闪耀）",
 
-  "MCM.ClearImage": "清除图片"
+  "MCM.ClearImage": "清除图片",
+  "MCM.BroadcastLabel": "GM 广播设置",
+  "MCM.BroadcastButton": "将我的光标设置广播给所有玩家",
+  "MCM.BroadcastSuccess": "光标设置已广播给所有在线玩家！"
 }

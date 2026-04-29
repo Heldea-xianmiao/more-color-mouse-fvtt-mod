@@ -13,9 +13,17 @@ class MouseManager {
         this.resizeTimer = null;
         this.cursorImg = null;
         this.trailImg = null;
+        this._gmConfig = null;
+        this._socketReady = false;
         
         this.config = {};
     }
+
+    static BROADCAST_KEYS = [
+        'enable', 'hideSystemCursor', 'trailLength', 'cursorShape',
+        'cursorImage', 'cursorSize', 'rainbowMode', 'baseColor',
+        'trailColor', 'trailImage', 'trailStyle', 'particlePreset'
+    ];
 
     init() {
         this.registerSettings();
@@ -175,6 +183,16 @@ class MouseManager {
                 scope: 'client',
                 config: true,
                 onChange: onChange(function() { this.updateConfig(); })
+            },
+            {
+                key: 'useGmCursor',
+                name: "MCM.Settings.UseGmCursor.Name",
+                hint: "MCM.Settings.UseGmCursor.Hint",
+                type: Boolean,
+                default: false,
+                scope: 'client',
+                config: true,
+                onChange: onChange(function() { this.updateConfig(); })
             }
         ];
 
@@ -188,9 +206,18 @@ class MouseManager {
                 type: s.type,
                 range: s.range,
                 choices: s.choices,
-                filePicker: s.filePicker, // <--- Correctly pass the filePicker option
+                filePicker: s.filePicker,
                 onChange: s.onChange
             });
+        });
+
+        game.settings.register(MODULE_ID, 'gmBroadcastConfig', {
+            name: 'GM Broadcast Config',
+            hint: 'Stores the GM\'s last broadcasted cursor configuration.',
+            scope: 'world',
+            config: false,
+            type: Object,
+            default: {}
         });
 
         Hooks.on("renderSettingsConfig", (app, html, data) => {
@@ -262,10 +289,26 @@ class MouseManager {
                     input.dispatchEvent(new Event('change', { bubbles: true }));
                 });
             });
+
+            if (game.user.isGM) {
+                const lastInput = root.querySelector(`input[name="${MODULE_ID}.useGmCursor"]`);
+                const marker = lastInput?.closest('.form-group') || root.querySelector('.settings-list > .form-group:last-child');
+                if (marker) {
+                    const broadcastGroup = document.createElement('div');
+                    broadcastGroup.className = 'form-group';
+                    broadcastGroup.innerHTML = `<label>${game.i18n.localize('MCM.BroadcastLabel')}</label><div class="form-fields"><button type="button" class="mcm-broadcast-btn" style="flex:1;"><i class="fas fa-bullhorn"></i> ${game.i18n.localize('MCM.BroadcastButton')}</button></div>`;
+                    marker.insertAdjacentElement('afterend', broadcastGroup);
+                    broadcastGroup.querySelector('.mcm-broadcast-btn').addEventListener('click', () => {
+                        mouseManager.broadcastToPlayers();
+                    });
+                }
+            }
         });
     }
 
     updateConfig() {
+        const useGmCursor = game.settings.get(MODULE_ID, 'useGmCursor');
+
         this.config = {
             enable: game.settings.get(MODULE_ID, 'enable'),
             hideSystemCursor: game.settings.get(MODULE_ID, 'hideSystemCursor'),
@@ -278,10 +321,22 @@ class MouseManager {
             trailColor: game.settings.get(MODULE_ID, 'trailColor'),
             trailImage: (game.settings.get(MODULE_ID, 'trailImage') || '').trim(),
             trailStyle: game.settings.get(MODULE_ID, 'trailStyle'),
-            particlePreset: game.settings.get(MODULE_ID, 'particlePreset')
+            particlePreset: game.settings.get(MODULE_ID, 'particlePreset'),
+            useGmCursor
         };
-        
-        // Ensure system cursor state is consistent with new settings
+
+        if (useGmCursor) {
+            const gmConfig = this._gmConfig || game.settings.get(MODULE_ID, 'gmBroadcastConfig');
+            if (gmConfig && Object.keys(gmConfig).length > 0) {
+                for (const key of MouseManager.BROADCAST_KEYS) {
+                    if (key in gmConfig) {
+                        this.config[key] = gmConfig[key];
+                    }
+                }
+            }
+            this.config.useGmCursor = true;
+        }
+
         this.toggleSystemCursor();
         this.loadCursorImage();
         this.loadTrailImage();
@@ -317,7 +372,6 @@ class MouseManager {
             const img = new Image();
             img.src = currentSrc;
             img.onload = () => {
-                // Prevent race condition
                 if (this.config.cursorImage === currentSrc) {
                     this.cursorImg = img;
                 }
@@ -333,10 +387,41 @@ class MouseManager {
         }
     }
 
+    broadcastToPlayers() {
+        const config = {};
+        for (const key of MouseManager.BROADCAST_KEYS) {
+            config[key] = game.settings.get(MODULE_ID, key);
+        }
+
+        game.settings.set(MODULE_ID, 'gmBroadcastConfig', config).then(() => {
+            game.socket.emit(`module.${MODULE_ID}`, {
+                type: 'gmBroadcast',
+                senderId: game.user.id,
+                config
+            });
+            ui.notifications.info(game.i18n.localize('MCM.BroadcastSuccess'));
+        });
+    }
+
     setup() {
         if (this.canvas) return;
 
         this.updateConfig();
+
+        if (!this._socketReady) {
+            game.socket.on(`module.${MODULE_ID}`, (data) => {
+                if (data.type === 'gmBroadcast' && data.senderId !== game.user.id) {
+                    this._gmConfig = data.config;
+                    if (game.settings.get(MODULE_ID, 'useGmCursor')) {
+                        this.updateConfig();
+                        if (this.config.enable) {
+                            if (!this.animationId) this.loop();
+                        }
+                    }
+                }
+            });
+            this._socketReady = true;
+        }
 
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'more-color-mouse-canvas';
