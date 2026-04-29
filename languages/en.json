@@ -45,5 +45,6 @@
   "MCM.ClearImage": "Clear Image",
   "MCM.BroadcastLabel": "GM Broadcast",
   "MCM.BroadcastButton": "Broadcast My Cursor Settings to All Players",
-  "MCM.BroadcastSuccess": "Cursor settings broadcast to all online players!"
+  "MCM.BroadcastSuccess": "Cursor settings broadcast to all online players!",
+  "MCM.BroadcastFail": "Broadcast failed. Please try again."
 }

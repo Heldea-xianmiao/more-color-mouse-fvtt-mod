@@ -398,8 +398,14 @@ class MouseManager {
                 type: 'gmBroadcast',
                 senderId: game.user.id,
                 config
+            }, (error) => {
+                if (error) {
+                    console.error('More Color Mouse | Broadcast failed:', error);
+                    ui.notifications.error(game.i18n.localize('MCM.BroadcastFail'));
+                    return;
+                }
+                ui.notifications.info(game.i18n.localize('MCM.BroadcastSuccess'));
             });
-            ui.notifications.info(game.i18n.localize('MCM.BroadcastSuccess'));
         });
     }
 

@@ -45,5 +45,6 @@
   "MCM.ClearImage": "清除图片",
   "MCM.BroadcastLabel": "GM 广播设置",
   "MCM.BroadcastButton": "将我的光标设置广播给所有玩家",
-  "MCM.BroadcastSuccess": "光标设置已广播给所有在线玩家！"
+  "MCM.BroadcastSuccess": "光标设置已广播给所有在线玩家！",
+  "MCM.BroadcastFail": "广播失败，请重试"
 }
