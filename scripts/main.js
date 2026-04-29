@@ -4,16 +4,16 @@ class MouseManager {
     constructor() {
         this.canvas = null;
         this.ctx = null;
-        this.mouseX = -100; // Start off-screen
+        this.mouseX = -100;
         this.mouseY = -100;
         this.history = [];
         this.particles = [];
         this.hue = 0;
         this.animationId = null;
+        this.resizeTimer = null;
         this.cursorImg = null;
         this.trailImg = null;
         
-        // Configuration cache
         this.config = {};
     }
 
@@ -335,7 +335,10 @@ class MouseManager {
         this.ctx = this.canvas.getContext('2d');
         document.body.appendChild(this.canvas);
 
-        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('resize', () => {
+            if (this.resizeTimer) cancelAnimationFrame(this.resizeTimer);
+            this.resizeTimer = requestAnimationFrame(() => this.resize());
+        });
         this.resize();
 
         window.addEventListener('mousemove', (e) => {
