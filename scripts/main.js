@@ -358,6 +358,12 @@ class MouseManager {
             }
         });
 
+        document.addEventListener('mouseleave', () => {
+            this.mouseX = -100;
+            this.mouseY = -100;
+            this.history = [];
+        });
+
         this.toggle();
     }
     
