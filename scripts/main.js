@@ -277,6 +277,8 @@ class MouseManager {
         this.toggleSystemCursor();
         this.loadCursorImage();
         this.loadTrailImage();
+        this.particles = [];
+        this.history = [];
     }
 
     loadTrailImage() {
