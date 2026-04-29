@@ -345,7 +345,6 @@ class MouseManager {
             }
         });
 
-        this.loop();
         this.toggle();
     }
     
@@ -413,8 +412,15 @@ class MouseManager {
     }
 
     toggle() {
-        if (this.canvas) {
-            this.canvas.style.display = this.config.enable ? 'block' : 'none';
+        if (this.config.enable) {
+            if (this.canvas) this.canvas.style.display = 'block';
+            if (!this.animationId) this.loop();
+        } else {
+            if (this.canvas) this.canvas.style.display = 'none';
+            if (this.animationId) {
+                cancelAnimationFrame(this.animationId);
+                this.animationId = null;
+            }
         }
         this.toggleSystemCursor();
     }
@@ -433,7 +439,7 @@ class MouseManager {
     loop() {
         this.animationId = requestAnimationFrame(() => this.loop());
 
-        if (!this.config.enable || !this.ctx) return;
+        if (!this.ctx) return;
 
         // Clear
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
