@@ -19,154 +19,162 @@ class MouseManager {
 
     init() {
         this.registerSettings();
-        this.updateConfig();
     }
 
     registerSettings() {
-        // Define settings with direct Chinese strings
+        const onChange = (fn) => {
+            return () => {
+                try {
+                    fn.call(this);
+                } catch (e) {
+                    console.error(`More Color Mouse | onChange error:`, e);
+                }
+            };
+        };
+
         const settings = [
             {
                 key: 'enable',
-                name: "启用自定义光标",
-                hint: "开启或关闭自定义光标及拖尾效果。",
+                name: "MCM.Settings.Enable.Name",
+                hint: "MCM.Settings.Enable.Hint",
                 type: Boolean,
                 default: true,
                 scope: 'client',
                 config: true,
-                onChange: () => { this.updateConfig(); this.toggle(); }
+                onChange: onChange(function() { this.updateConfig(); this.toggle(); })
             },
             {
                 key: 'hideSystemCursor',
-                name: "隐藏系统默认光标",
-                hint: "勾选后将强制隐藏电脑自带的鼠标指针。(需要重载世界生效)",
+                name: "MCM.Settings.HideSystemCursor.Name",
+                hint: "MCM.Settings.HideSystemCursor.Hint",
                 type: Boolean,
                 default: false,
                 scope: 'client',
                 config: true,
-                onChange: () => { this.updateConfig(); this.toggleSystemCursor(); }
+                onChange: onChange(function() { this.updateConfig(); this.toggleSystemCursor(); })
             },
             {
                 key: 'trailLength',
-                name: "拖尾停留时间/长度",
-                hint: "轨迹保留的帧数，数值越大拖尾越长。",
+                name: "MCM.Settings.TrailLength.Name",
+                hint: "MCM.Settings.TrailLength.Hint",
                 type: Number,
                 default: 20,
                 range: { min: 2, max: 100, step: 1 },
                 scope: 'client',
                 config: true,
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'cursorShape',
-                name: "光标形状",
-                hint: "选择光标的显示形状。若已上传自定义图片，则优先显示图片。",
+                name: "MCM.Settings.CursorShape.Name",
+                hint: "MCM.Settings.CursorShape.Hint",
                 type: String,
                 default: 'circle',
                 choices: {
-                    'circle': '圆形 (Circle)',
-                    'ring': '空心圆环 (Ring)',
-                    'square': '正方形 (Square)',
-                    'star': '星星 (Star)',
-                    'heart': '爱心 (Heart)',
-                    'triangle': '三角形 (Triangle)'
+                    'circle': "MCM.CursorShape.Circle",
+                    'ring': "MCM.CursorShape.Ring",
+                    'square': "MCM.CursorShape.Square",
+                    'star': "MCM.CursorShape.Star",
+                    'heart': "MCM.CursorShape.Heart",
+                    'triangle': "MCM.CursorShape.Triangle"
                 },
                 scope: 'client',
                 config: true,
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'cursorImage',
-                name: "自定义光标图片",
-                hint: "上传一张图片作为鼠标光标 (推荐 PNG 格式)。留空则使用上方设定的形状。",
+                name: "MCM.Settings.CursorImage.Name",
+                hint: "MCM.Settings.CursorImage.Hint",
                 type: String,
                 default: '',
                 scope: 'client',
                 config: true,
                 filePicker: 'image',
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'cursorSize',
-                name: "光标大小",
-                hint: "光标图形的半径或尺寸。",
+                name: "MCM.Settings.CursorSize.Name",
+                hint: "MCM.Settings.CursorSize.Hint",
                 type: Number,
                 default: 8,
                 range: { min: 1, max: 30, step: 1 },
                 scope: 'client',
                 config: true,
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'rainbowMode',
-                name: "彩虹模式",
-                hint: "开启后，光标和拖尾颜色会不断流转变化。",
+                name: "MCM.Settings.RainbowMode.Name",
+                hint: "MCM.Settings.RainbowMode.Hint",
                 type: Boolean,
                 default: true,
                 scope: 'client',
                 config: true,
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'baseColor',
-                name: "光标颜色",
-                hint: "光标的主体颜色 (彩虹模式关闭时生效)。",
+                name: "MCM.Settings.BaseColor.Name",
+                hint: "MCM.Settings.BaseColor.Hint",
                 type: String,
                 default: '#ff0000',
                 scope: 'client',
                 config: true,
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'trailColor',
-                name: "拖尾颜色",
-                hint: "单独设置拖尾的颜色，留空则跟随光标颜色。",
+                name: "MCM.Settings.TrailColor.Name",
+                hint: "MCM.Settings.TrailColor.Hint",
                 type: String,
                 default: '',
                 scope: 'client',
                 config: true,
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'trailImage',
-                name: "自定义拖尾图片",
-                hint: "当拖尾样式选择“图片重复”时使用的图片。",
+                name: "MCM.Settings.TrailImage.Name",
+                hint: "MCM.Settings.TrailImage.Hint",
                 type: String,
                 default: '',
                 scope: 'client',
                 config: true,
                 filePicker: 'image',
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'trailStyle',
-                name: "拖尾样式",
-                hint: "选择拖尾的视觉表现形式。",
+                name: "MCM.Settings.TrailStyle.Name",
+                hint: "MCM.Settings.TrailStyle.Hint",
                 type: String,
                 default: 'simple',
                 choices: {
-                    'simple': '线性拖尾',
-                    'particles': '粒子发射',
-                    'image': '图片重复 (Image)'
+                    'simple': "MCM.TrailStyle.Simple",
+                    'particles': "MCM.TrailStyle.Particles",
+                    'image': "MCM.TrailStyle.Image"
                 },
                 scope: 'client',
                 config: true,
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             },
             {
                 key: 'particlePreset',
-                name: "粒子特效预设",
-                hint: "当拖尾样式为“粒子”时，选择具体的粒子动作效果。",
+                name: "MCM.Settings.ParticlePreset.Name",
+                hint: "MCM.Settings.ParticlePreset.Hint",
                 type: String,
                 default: 'spread',
                 choices: {
-                    'spread': '扩散 (默认)',
-                    'fire': '火焰 (上升)',
-                    'snow': '雪花 (下落)',
-                    'sparkle': '魔法闪烁 (静止闪耀)'
+                    'spread': "MCM.ParticlePreset.Spread",
+                    'fire': "MCM.ParticlePreset.Fire",
+                    'snow': "MCM.ParticlePreset.Snow",
+                    'sparkle': "MCM.ParticlePreset.Sparkle"
                 },
                 scope: 'client',
                 config: true,
-                onChange: () => this.updateConfig()
+                onChange: onChange(function() { this.updateConfig(); })
             }
         ];
 
@@ -185,12 +193,9 @@ class MouseManager {
             });
         });
 
-        // UI Injection Hook (Only for Color Pickers now, let Foundry handle File Picker)
         Hooks.on("renderSettingsConfig", (app, html, data) => {
-            // Ensure jQuery object
-            const $html = $(html);
+            const $html = html instanceof jQuery ? html : $(html);
 
-            // 1. Color Pickers
             const colorFields = ['baseColor', 'trailColor'];
             colorFields.forEach(fieldKey => {
                 const name = `${MODULE_ID}.${fieldKey}`;
@@ -198,17 +203,13 @@ class MouseManager {
                 
                 if (!input.length) return;
                 
-                // Avoid double injection
                 if (input.parent().hasClass('mcm-color-wrapper')) return;
 
-                // Create a container that fits into Foundry's form structure
-                // Usually inputs are inside .form-fields
                 const wrapper = $('<div class="mcm-color-wrapper" style="display:flex; align-items:center; gap: 8px;"></div>');
                 
                 input.wrap(wrapper);
                 const actualWrapper = input.parent();
 
-                // Determine initial color (handle empty string)
                 let initialColor = input.val();
                 if (!initialColor || !initialColor.startsWith('#')) initialColor = '#000000';
 
@@ -228,28 +229,29 @@ class MouseManager {
                 actualWrapper.append(colorPicker);
             });
 
-            // 2. Image Clear Buttons
             const imageFields = ['cursorImage', 'trailImage'];
             imageFields.forEach(fieldKey => {
                 const name = `${MODULE_ID}.${fieldKey}`;
                 const input = $html.find(`input[name="${name}"]`);
                 if (!input.length) return;
 
-                // Create Clear Button
-                const clearBtn = $(`<button type="button" title="清除图片" style="flex:0 0 30px; line-height:24px; margin-left:5px;"><i class="fas fa-trash"></i></button>`);
+                const clearBtn = $(`<button type="button" title="${game.i18n.localize('MCM.ClearImage')}" style="flex:0 0 30px; line-height:24px; margin-left:5px;"><i class="fas fa-trash"></i></button>`);
                 
-                // Insert after the file-picker button if it exists
                 const pickerBtn = input.next('button.file-picker');
                 if (pickerBtn.length) {
                     pickerBtn.after(clearBtn);
                 } else {
-                    input.after(clearBtn);
+                    const formFields = input.closest('.form-fields');
+                    if (formFields.length) {
+                        formFields.append(clearBtn);
+                    } else {
+                        input.after(clearBtn);
+                    }
                 }
 
-                // Click event
                 clearBtn.on('click', () => {
                     input.val('');
-                    input.trigger('change'); // Notify Foundry of change
+                    input.trigger('change');
                 });
             });
         });
@@ -324,30 +326,27 @@ class MouseManager {
     setup() {
         if (this.canvas) return;
 
-        // Create Canvas
+        this.updateConfig();
+
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'more-color-mouse-canvas';
         this.ctx = this.canvas.getContext('2d');
         document.body.appendChild(this.canvas);
 
-        // Resize Listener
         window.addEventListener('resize', () => this.resize());
         this.resize();
 
-        // Mouse Move Listener
         window.addEventListener('mousemove', (e) => {
             this.mouseX = e.clientX;
             this.mouseY = e.clientY;
             
-            // Add particles if in particle mode
             if (this.config.enable && this.config.trailStyle === 'particles') {
                  this.addParticles(e.clientX, e.clientY);
             }
         });
 
-        // Start Loop
         this.loop();
-        this.toggleSystemCursor();
+        this.toggle();
     }
     
     addParticles(x, y) {
