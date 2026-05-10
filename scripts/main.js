@@ -211,21 +211,15 @@ class MouseManager {
         ];
 
         settings.forEach(s => {
-            const localizedChoices = {};
-            if (s.choices) {
-                for (const [k, v] of Object.entries(s.choices)) {
-                    localizedChoices[k] = game.i18n.localize(v);
-                }
-            }
             game.settings.register(MODULE_ID, s.key, {
-                name: game.i18n.localize(s.name),
-                hint: game.i18n.localize(s.hint),
+                name: s.name,
+                hint: s.hint,
                 scope: s.scope,
                 config: s.config,
                 default: s.default,
                 type: s.type,
                 range: s.range,
-                choices: s.choices ? localizedChoices : undefined,
+                choices: s.choices,
                 filePicker: s.filePicker,
                 onChange: s.onChange
             });
