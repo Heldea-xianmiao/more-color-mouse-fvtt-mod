@@ -230,8 +230,8 @@ class MouseManager {
             hint: 'Stores the GM\'s last broadcasted cursor configuration.',
             scope: 'world',
             config: false,
-            type: Object,
-            default: {}
+            type: String,
+            default: '{}'
         });
 
         Hooks.on("renderSettingsConfig", (app, html, data) => {
@@ -340,7 +340,7 @@ class MouseManager {
         };
 
         if (useGmCursor) {
-            const gmConfig = this._gmConfig || game.settings.get(MODULE_ID, 'gmBroadcastConfig');
+            const gmConfig = this._gmConfig || this.readBroadcastConfig();
             if (gmConfig && Object.keys(gmConfig).length > 0) {
                 for (const key of MouseManager.BROADCAST_KEYS) {
                     if (key in gmConfig) {
@@ -407,20 +407,39 @@ class MouseManager {
             config[key] = game.settings.get(MODULE_ID, key);
         }
 
-        game.settings.set(MODULE_ID, 'gmBroadcastConfig', config).then(() => {
+        game.settings.set(MODULE_ID, 'gmBroadcastConfig', JSON.stringify(config)).then(() => {
             game.socket.emit(`module.${MODULE_ID}`, {
                 type: 'gmBroadcast',
-                senderId: game.user.id,
                 config
-            }, (error) => {
-                if (error) {
-                    console.error('More Color Mouse | Broadcast failed:', error);
-                    ui.notifications.error(game.i18n.localize('MCM.BroadcastFail'));
-                    return;
-                }
+            }).then(() => {
                 ui.notifications.info(game.i18n.localize('MCM.BroadcastSuccess'));
+            }).catch((error) => {
+                console.error('More Color Mouse | Broadcast failed:', error);
+                ui.notifications.error(game.i18n.localize('MCM.BroadcastFail'));
             });
         });
+    }
+
+    readBroadcastConfig() {
+        try {
+            const raw = game.settings.get(MODULE_ID, 'gmBroadcastConfig');
+            if (!raw) return {};
+            if (typeof raw === 'string') return JSON.parse(raw);
+            if (typeof raw === 'object') {
+                // Legacy Object-type value (pre-1.4.0): migrate it to a JSON string.
+                // Writing world-scope settings requires GM permission, so best-effort only.
+                try {
+                    const json = JSON.stringify(raw);
+                    game.settings.set(MODULE_ID, 'gmBroadcastConfig', json).catch(() => {});
+                } catch (e) {
+                    // Ignore: the legacy value remains usable for this session.
+                }
+                return raw;
+            }
+        } catch (e) {
+            console.warn('More Color Mouse | Failed to read broadcast config:', e);
+        }
+        return {};
     }
 
     setup() {
@@ -429,8 +448,8 @@ class MouseManager {
         this.updateConfig();
 
         if (!this._socketReady) {
-            game.socket.on(`module.${MODULE_ID}`, (data) => {
-                if (data.type === 'gmBroadcast' && data.senderId !== game.user.id) {
+            game.socket.on(`module.${MODULE_ID}`, (data, userId) => {
+                if (data.type === 'gmBroadcast' && userId !== game.user.id) {
                     this._gmConfig = data.config;
                     if (game.settings.get(MODULE_ID, 'useGmCursor')) {
                         this.updateConfig();
