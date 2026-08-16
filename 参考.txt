@@ -1,0 +1,35 @@
+Foundry VTT v14 API（Context7）
+https://context7.com/websites/foundryvtt_api_v14
+Foundry VTT v14 核心客户端 API 文档索引，适合查询 Document、Application、Hooks、Canvas 等接口。
+
+Foundry VTT v14 官方 API
+https://foundryvtt.com/api/v14/
+Foundry 官方发布的 v14 API 文档，可作为最终权威参考。
+
+Pathfinder 2e 系统（Context7）
+https://context7.com/foundryvtt/pf2e
+PF2e 系统源码的 Context7 索引，适合查询 Actor、Item、规则元素和系统内部实现。
+
+Pathfinder 2e 系统源码
+https://github.com/foundryvtt/pf2e
+PF2e for Foundry VTT 的官方 GitHub 仓库。
+
+D&D 5e 系统（Context7）
+https://context7.com/foundryvtt/dnd5e
+D&D5e 系统源码的 Context7 文档索引。
+
+D&D 5e 系统源码
+https://github.com/foundryvtt/dnd5e
+D&D5e for Foundry VTT 的官方 GitHub 仓库。
+
+D&D 5e 系统 Wiki
+https://github.com/foundryvtt/dnd5e/wiki
+D&D5e 系统的开发说明、数据结构和扩展文档。
+
+FVTT 模块开发模板
+https://github.com/DFreds/dfreds-module-template-ts
+基于 TypeScript 和 Vite 的模块模板，包含类型定义、构建、Compendium 管理和 GitHub Actions 发布流程。
+
+FVTT 系统开发模板
+https://github.com/asacolips-projects/boilerplate
+用于创建自定义 Foundry 游戏系统的基础仓库，适合参考 Actor、Item、Sheet 和系统清单结构。
