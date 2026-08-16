@@ -2,7 +2,7 @@
   "MCM.Settings.Enable.Name": "Enable Custom Cursor",
   "MCM.Settings.Enable.Hint": "Enable or disable the custom cursor and trail effects.",
   "MCM.Settings.HideSystemCursor.Name": "Hide System Cursor",
-  "MCM.Settings.HideSystemCursor.Hint": "Force-hide the system's default mouse pointer. (Requires world reload)",
+  "MCM.Settings.HideSystemCursor.Hint": "Force-hide the system's default mouse pointer.",
   "MCM.Settings.TrailLength.Name": "Trail Length",
   "MCM.Settings.TrailLength.Hint": "Number of tracked history points. Higher values create longer trails.",
   "MCM.Settings.CursorShape.Name": "Cursor Shape",
@@ -46,6 +46,7 @@
   "MCM.TrailStyle.Ribbon": "Ribbon Trail",
   "MCM.TrailStyle.Dashed": "Dashed Trail",
   "MCM.TrailStyle.Dots": "Dots Trail",
+  "MCM.TrailStyle.None": "No Trail",
 
   "MCM.ParticlePreset.Spread": "Spread (Default)",
   "MCM.ParticlePreset.Fire": "Fire (Rising)",

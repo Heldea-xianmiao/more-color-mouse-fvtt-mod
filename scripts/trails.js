@@ -15,15 +15,17 @@ export const HISTORY_TRAIL_STYLES = ['simple', 'image', 'glow', 'ribbon', 'dashe
  * @param {string} trailColor    Effective trail color for this frame.
  */
 export function renderTrail(ctx, data, config, currentColor, trailColor) {
-    const { history, particles, hue, trailImg } = data;
+    const { history, particles, hue, trailImg, dt = 1 } = data;
 
     switch (config.trailStyle) {
         case 'simple':
             return renderSimpleTrail(ctx, history, config, hue, trailColor);
         case 'image':
+            // Fall back to the simple trail when no image was uploaded.
+            if (!trailImg) return renderSimpleTrail(ctx, history, config, hue, trailColor);
             return renderImageTrail(ctx, history, config, trailImg);
         case 'particles':
-            return renderParticles(ctx, particles, config, hue, currentColor);
+            return renderParticles(ctx, particles, config, hue, currentColor, dt);
         case 'glow':
             return renderGlowTrail(ctx, history, config, hue, trailColor);
         case 'ribbon':
@@ -253,13 +255,13 @@ export function addParticles(particles, config, x, y) {
     }
 }
 
-function renderParticles(ctx, particles, config, hue, defaultColor) {
+function renderParticles(ctx, particles, config, hue, defaultColor, dt = 1) {
     for (let i = particles.length - 1; i >= 0; i--) {
         let p = particles[i];
-        if (p.preset === 'gravity') p.vy += 0.15;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life -= 0.02;
+        if (p.preset === 'gravity') p.vy += 0.15 * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.life -= 0.02 * dt;
 
         if (p.life <= 0) {
             particles.splice(i, 1);

@@ -2,7 +2,7 @@
   "MCM.Settings.Enable.Name": "启用自定义光标",
   "MCM.Settings.Enable.Hint": "开启或关闭自定义光标及拖尾效果。",
   "MCM.Settings.HideSystemCursor.Name": "隐藏系统默认光标",
-  "MCM.Settings.HideSystemCursor.Hint": "勾选后将强制隐藏电脑自带的鼠标指针。（需要重载世界生效）",
+  "MCM.Settings.HideSystemCursor.Hint": "勾选后将强制隐藏电脑自带的鼠标指针。",
   "MCM.Settings.TrailLength.Name": "拖尾停留时间/长度",
   "MCM.Settings.TrailLength.Hint": "轨迹保留的帧数，数值越大拖尾越长。",
   "MCM.Settings.CursorShape.Name": "光标形状",
@@ -46,6 +46,7 @@
   "MCM.TrailStyle.Ribbon": "丝带拖尾",
   "MCM.TrailStyle.Dashed": "虚线拖尾",
   "MCM.TrailStyle.Dots": "圆点拖尾",
+  "MCM.TrailStyle.None": "无拖尾",
 
   "MCM.ParticlePreset.Spread": "扩散",
   "MCM.ParticlePreset.Fire": "火焰（上升）",

@@ -84,11 +84,11 @@ export function renderCursor(ctx, opts) {
         ctx.lineWidth = 2;
         ctx.stroke();
     } else {
+        // Single fill with the glow shadow (previously filled twice).
         ctx.fillStyle = currentColor;
-        ctx.fill();
         ctx.shadowBlur = 10;
         ctx.shadowColor = currentColor;
-        if (drawShape !== 'ring') ctx.fill();
+        ctx.fill();
         ctx.shadowBlur = 0;
     }
 }

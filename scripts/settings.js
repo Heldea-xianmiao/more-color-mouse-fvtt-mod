@@ -146,7 +146,8 @@ export function registerSettings(manager) {
                 'glow': "MCM.TrailStyle.Glow",
                 'ribbon': "MCM.TrailStyle.Ribbon",
                 'dashed': "MCM.TrailStyle.Dashed",
-                'dots': "MCM.TrailStyle.Dots"
+                'dots': "MCM.TrailStyle.Dots",
+                'none': "MCM.TrailStyle.None"
             },
             scope: 'client',
             config: true,
@@ -331,7 +332,26 @@ export function readConfig(manager) {
         config.useGmCursor = true;
     }
 
+    // Sanitize colors (covers both local and GM-broadcasted values).
+    config.baseColor = normalizeHexColor(config.baseColor, '#ff0000');
+    config.trailColor = normalizeHexColor(config.trailColor, '');
+
     return config;
+}
+
+/**
+ * Validate/normalize a hex color, expanding the 3-digit shorthand.
+ * @param {string} value
+ * @param {string} fallback  Used when the value is missing or invalid.
+ * @returns {string}
+ */
+export function normalizeHexColor(value, fallback) {
+    const v = (value || '').trim();
+    if (/^#[0-9A-Fa-f]{6}$/.test(v)) return v.toLowerCase();
+    if (/^#[0-9A-Fa-f]{3}$/.test(v)) {
+        return '#' + v[1] + v[1] + v[2] + v[2] + v[3] + v[3];
+    }
+    return fallback;
 }
 
 /**

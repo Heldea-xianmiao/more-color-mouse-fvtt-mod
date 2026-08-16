@@ -18,6 +18,7 @@ class MouseManager {
         this.trailImg = null;
         this._gmConfig = null;
         this._socketReady = false;
+        this._lastFrameTime = 0;
 
         this.config = {};
     }
@@ -146,8 +147,10 @@ class MouseManager {
 
     resize() {
         if (this.canvas) {
-            this.canvas.width = window.innerWidth;
-            this.canvas.height = window.innerHeight;
+            const dpr = window.devicePixelRatio || 1;
+            this.canvas.width = Math.round(window.innerWidth * dpr);
+            this.canvas.height = Math.round(window.innerHeight * dpr);
+            this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
     }
 
@@ -176,24 +179,35 @@ class MouseManager {
         }
     }
 
-    loop() {
-        this.animationId = requestAnimationFrame(() => this.loop());
+    loop(timestamp) {
+        this.animationId = requestAnimationFrame((ts) => this.loop(ts));
 
         if (!this.ctx) return;
+
+        // Frame-rate independent delta time (1.0 = one 60Hz frame),
+        // clamped so tab switches / hitches don't cause jumps.
+        const now = timestamp || 0;
+        if (!this._lastFrameTime) this._lastFrameTime = now;
+        const dt = Math.min(Math.max((now - this._lastFrameTime) / (1000 / 60), 0.25), 3);
+        this._lastFrameTime = now;
 
         // Clear
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Update Hue for Rainbow
-        this.hue = (this.hue + 2) % 360;
+        this.hue = (this.hue + 2 * dt) % 360;
         const currentColor = this.config.rainbowMode ? `hsl(${this.hue}, 100%, 50%)` : this.config.baseColor;
         const trailColor = this.config.trailColor ? this.config.trailColor : currentColor;
 
-        // Track History
+        // Track History (skip near-duplicate points so idle cursors don't pile up)
         if (HISTORY_TRAIL_STYLES.includes(this.config.trailStyle)) {
-            this.history.push({ x: this.mouseX, y: this.mouseY });
-            if (this.history.length > this.config.trailLength) {
-                this.history.shift();
+            const last = this.history[this.history.length - 1];
+            const moved = !last || Math.hypot(this.mouseX - last.x, this.mouseY - last.y) > 0.5;
+            if (moved) {
+                this.history.push({ x: this.mouseX, y: this.mouseY });
+                if (this.history.length > this.config.trailLength) {
+                    this.history.shift();
+                }
             }
         }
 
@@ -202,7 +216,8 @@ class MouseManager {
             history: this.history,
             particles: this.particles,
             hue: this.hue,
-            trailImg: this.trailImg
+            trailImg: this.trailImg,
+            dt
         }, this.config, currentColor, trailColor);
 
         // Render Main Cursor
