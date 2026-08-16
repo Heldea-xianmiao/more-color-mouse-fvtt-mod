@@ -13,6 +13,10 @@
     }
   ],
   "esmodules": [
+    "scripts/constants.js",
+    "scripts/settings.js",
+    "scripts/shapes.js",
+    "scripts/trails.js",
     "scripts/main.js"
   ],
   "styles": [
